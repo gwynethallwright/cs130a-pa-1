@@ -5,9 +5,20 @@ using namespace std;
 
 int * addPoly(int ** coeffs){
   static int * poly;
-  poly = new int[100];
-  for (int i = 0; i < 100; ++i){
+  poly = new int[10^4];
+  for (int i = 0; i < (10^4); ++i){
     poly[i] = (coeffs[0][i] + coeffs[1][i])%10^6;
+  }
+  return poly;
+}
+
+int * mulPoly(int ** coeffs){
+  static int * poly;
+  poly = new int[10^4];
+  for (int i = 0; i < (10^4); ++i){
+    for (int j = 0; j < (10^4); ++j){
+      poly[(i+j)%10^6] = (coeffs[0][i]*coeffs[1][j])%10^6;
+    }
   }
   return poly;
 }
@@ -17,8 +28,8 @@ int ** readPoly(string input){
   int coeff;
   static int ** poly;
   poly = new int * [2];
-  poly[0] = new int[100];
-  poly[1] = new int[100];
+  poly[0] = new int[10^4];
+  poly[1] = new int[10^4];
   int i = 0;
   int add = 1;
   istringstream iss(input);
