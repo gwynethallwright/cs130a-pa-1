@@ -7,14 +7,14 @@ int * addPoly(int ** coeffs){
   static int * poly;
   poly = new int[100];
   for (int i = 0; i < 100; ++i){
-    poly[i] = coeffs[0][i] + coeffs[1][i];
+    poly[i] = (coeffs[0][i] + coeffs[1][i])%10^6;
   }
   return poly;
 }
 
 int ** readPoly(string input){
   string current;
-  int power;
+  int coeff;
   static int ** poly;
   poly = new int * [2];
   poly[0] = new int[100];
@@ -32,8 +32,8 @@ int ** readPoly(string input){
       add = 0;
     }
     else {
-      iss >> power;
-      poly[i][stoi(current)] = power;
+      iss >> coeff;
+      poly[i][stoi(current)%10^4] = coeff%10^6;
     }
   } while (iss);
   return poly;
