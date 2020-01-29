@@ -3,37 +3,25 @@
 #include <string>
 using namespace std;
 
-int * addPoly(int coeffs[2][100]){
-  static int poly[100] = {};
+int * addPoly(int ** coeffs){
+  static int * poly;
+  poly = new int[100];
   for (int i = 0; i < 100; ++i){
     poly[i] = coeffs[0][i] + coeffs[1][i];
-    cout << poly[i] << "\n";
   }
   return poly;
 }
 
-int * readPoly(string input){
-  static int poly[100] = {};
-  istringstream iss(input);
-  int index;
-  int power;
-  do{
-    iss >> index;
-    iss >> power;
-    poly[index] = power;
-      
-  } while (iss);
-  return poly;
-}
-
-int main(int argc, char** argv){
+int ** readPoly(string input){
   string current;
   int power;
-  int poly[2][100] = {};
-  int * poly_result;
+  static int ** poly;
+  poly = new int * [2];
+  poly[0] = new int[100];
+  poly[1] = new int[100];
   int i = 0;
   int add = 1;
-  istringstream iss(argv[1]);
+  istringstream iss(input);
   do{
     iss >> current;
     if (current == "+"){
@@ -48,6 +36,13 @@ int main(int argc, char** argv){
       poly[i][stoi(current)] = power;
     }
   } while (iss);
+  return poly;
+}
+
+int main(int argc, char** argv){
+  int ** poly;
+  poly = readPoly(argv[1]);
+  int * poly_result;
   poly_result = addPoly(poly);
   return 0;
 }
