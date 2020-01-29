@@ -25,7 +25,7 @@ int * mulPoly(int ** coeffs){
 
 int ** readPoly(string input){
   string current;
-  int coeff;
+  int power;
   static int ** poly;
   poly = new int * [2];
   poly[0] = new int[10^4];
@@ -43,8 +43,8 @@ int ** readPoly(string input){
       add = 0;
     }
     else {
-      iss >> coeff;
-      poly[i][stoi(current)%10^4] = coeff%10^6;
+      iss >> power;
+      poly[i][power%10^4] = stoi(current)%10^6;
     }
   } while (iss);
   return poly;
