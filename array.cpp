@@ -5,19 +5,19 @@ using namespace std;
 
 int * addPoly(int ** coeffs){
   static int * poly;
-  poly = new int[10^4];
-  for (int i = 0; i < (10^4); ++i){
-    poly[i] = (coeffs[0][i] + coeffs[1][i])%10^6;
+  poly = new int[10000];
+  for (int i = 0; i < (10000); ++i){
+    poly[i] = (coeffs[0][i] + coeffs[1][i])%1000000;
   }
   return poly;
 }
 
 int * mulPoly(int ** coeffs){
   static int * poly;
-  poly = new int[10^4];
-  for (int i = 0; i < (10^4); ++i){
-    for (int j = 0; j < (10^4); ++j){
-      poly[(i+j)%10^6] = (coeffs[0][i]*coeffs[1][j])%10^6;
+  poly = new int[10000];
+  for (int i = 0; i < 10000; ++i){
+    for (int j = 0; j < 10000; ++j){
+      poly[(i+j)%1000000] = (coeffs[0][i]*coeffs[1][j])%1000000;
     }
   }
   return poly;
@@ -28,8 +28,8 @@ int ** readPoly(string input){
   int power;
   static int ** poly;
   poly = new int * [2];
-  poly[0] = new int[10^4];
-  poly[1] = new int[10^4];
+  poly[0] = new int[10000];
+  poly[1] = new int[10000];
   int i = 0;
   int add = 1;
   istringstream iss(input);
@@ -44,10 +44,19 @@ int ** readPoly(string input){
     }
     else {
       iss >> power;
-      poly[i][power%10^4] = stoi(current)%10^6;
+      poly[i][power%10000] = stoi(current)%1000000;
     }
   } while (iss);
   return poly;
+}
+
+void writePoly(int * coeffs){
+  for (int i = 0; i < (10000); ++i){
+    if (coeffs[i] != 0){
+      cout << to_string(coeffs[i]) << " " << to_string(i) << " ";
+    }
+  }
+  cout << "\n";
 }
 
 int main(int argc, char** argv){
@@ -55,5 +64,6 @@ int main(int argc, char** argv){
   poly = readPoly(argv[1]);
   int * poly_result;
   poly_result = addPoly(poly);
+  writePoly(poly[1]);
   return 0;
 }
