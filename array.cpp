@@ -18,25 +18,23 @@ int * readPoly(string input){
 }
 
 int main(int argc, char** argv){
-  string coeffs;
   string current;
-  int * poly_1;
-  int * poly_2;
+  int power;
+  int poly[2][100] = {};
+  int i = 0;
   istringstream iss(argv[1]);
   do{
     iss >> current;
-    if (strcmp(current.c_str(), "+") == 0){
-      poly_1 = readPoly(coeffs);
-      coeffs = "";
+    if (current == "+"){
+      i = i+1;
     }
-    else if (strcmp(current.c_str(), "*") == 0){
-      poly_1 = readPoly(coeffs);
-      coeffs = "";
+    else if (current == "*"){
+      i = i+1;
     }
     else {
-      coeffs = coeffs + current;
+      iss >> power;
+      poly[i][stoi(current)] = power;
     }
   } while (iss);
-  poly_2 = readPoly(coeffs);
   return 0;
 }
