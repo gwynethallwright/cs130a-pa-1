@@ -23,7 +23,18 @@ int * mulPoly(int ** coeffs){
   return poly;
 }
 
-int ** readPoly(string input){
+int * sqPoly(int ** coeffs){
+  static int * poly;
+  poly = new int[10000];
+  for (int i = 0; i < 10000; ++i){
+    for (int j = 0; j < 10000; ++j){
+      poly[(i+j)%1000000] = (coeffs[0][i]*coeffs[1][j])%1000000;
+    }
+  }
+  return poly;
+}
+
+auto readPoly(string input){
   string current;
   int power;
   static int ** poly;
@@ -42,12 +53,17 @@ int ** readPoly(string input){
       i = i+1;
       add = 0;
     }
+    else if (current == "**"){
+      add = 2;
+      break;
+    }
     else {
       iss >> power;
       poly[i][power%10000] = stoi(current)%1000000;
     }
   } while (iss);
-  return poly;
+  struct result {int ** polynomial; int operation;};
+  return result {poly, add};
 }
 
 void writePoly(int * coeffs){
@@ -60,8 +76,7 @@ void writePoly(int * coeffs){
 }
 
 int main(int argc, char** argv){
-  int ** poly;
-  poly = readPoly(argv[1]);
+  auto [poly, operation] = readPoly(argv[1]);
   int * poly_result;
   poly_result = addPoly(poly);
   writePoly(poly[1]);
