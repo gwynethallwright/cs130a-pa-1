@@ -3,6 +3,15 @@
 #include <string>
 using namespace std;
 
+void writePoly(int * coeffs){
+  for (int i = 0; i < 10000; ++i){
+    if (coeffs[i] != 0){
+      cout << coeffs[i] << " " << i << " ";
+    }
+  }
+  cout << "\n";
+}
+
 int * addPoly(int ** coeffs){
   static int * poly;
   poly = new int[10000];
@@ -17,9 +26,10 @@ int * mulPoly(int ** coeffs){
   poly = new int[10000];
   for (int i = 0; i < 10000; ++i){
     for (int j = 0; j < 10000; ++j){
-      poly[(i+j)%1000000] = (coeffs[0][i]*coeffs[1][j])%1000000;
+      poly[(i+j)%10000] = poly[(i+j)%10000] + (coeffs[0][i] * coeffs[1][j])%1000000;
     }
   }
+  writePoly(poly);
   return poly;
 }
 
@@ -28,7 +38,7 @@ int * sqPoly(int ** coeffs){
   poly = new int[10000];
   for (int i = 0; i < 10000; ++i){
     for (int j = 0; j < 10000; ++j){
-      poly[(i+j)%1000000] = (coeffs[0][i]*coeffs[1][j])%1000000;
+      poly[(i+j)%10000] = poly[(i+j)%10000] + (coeffs[0][i]*coeffs[0][j])%1000000;
     }
   }
   return poly;
@@ -66,25 +76,18 @@ auto readPoly(string input){
   return result {poly, add};
 }
 
-void writePoly(int * coeffs){
-  for (int i = 0; i < 10000; ++i){
-    if (coeffs[i] != 0){
-      cout << to_string(coeffs[i]) << " " << to_string(i) << " ";
-    }
-  }
-  cout << "\n";
-}
-
 int main(int argc, char** argv){
   auto [poly, operation] = readPoly(argv[1]);
   int * poly_result;
   if (operation == 0){
     poly_result = mulPoly(poly);
+    writePoly(poly[0]);
+    writePoly(poly[1]);
   }
   else if (operation == 1){
     poly_result = addPoly(poly);
   }
-  else{
+  else {
     poly_result = sqPoly(poly);
   }
   writePoly(poly_result);
