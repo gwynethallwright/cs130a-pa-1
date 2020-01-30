@@ -36,15 +36,18 @@ int * addPoly(int ** coeffs, set <int> * accessed){
 int * mulPoly(int ** coeffs, set <int> * accessed){
   static int * poly;
   poly = new int[10000];
+  set <int> add_to_accessed;
   std::set<int>::iterator it = accessed->begin();
   while (it != accessed->end()){
     std::set<int>::iterator it2 = accessed->begin();
     while (it2 != accessed->end()){
       poly[((*it)+(*it2))%10000] = poly[((*it)+(*it2))%10000] + (coeffs[0][*it]*coeffs[1][*it2])%1000000;
       it2++;
+      add_to_accessed.insert(((*it)+(*it2))%10000);
     }
     it++;
   }
+  accessed->insert(add_to_accessed.begin(), add_to_accessed.end());
   return poly;
 }
 
