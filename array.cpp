@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <set>
 using namespace std;
 
 void writePoly(int * coeffs){
@@ -8,6 +9,15 @@ void writePoly(int * coeffs){
     if (coeffs[i] != 0){
       cout << coeffs[i] << " " << i << " ";
     }
+  }
+  cout << "\n";
+}
+
+void writePoly2(int * coeffs, set <int> to_display){
+  std::set<int>::iterator it = to_display.begin();
+  while (it != to_display.end()){
+    cout << coeffs[(*it)] << " " << (*it) << " ";
+    it++;
   }
   cout << "\n";
 }
@@ -53,6 +63,7 @@ auto readPoly(string input){
   poly[1] = new int[10000];
   int i = 0;
   int add = 1;
+  set <int> items_to_display;
   istringstream iss(input);
   do{
     iss >> current;
@@ -70,14 +81,15 @@ auto readPoly(string input){
     else {
       iss >> power;
       poly[i][power%10000] = stoi(current)%1000000;
+      items_to_display.insert(power%10000);
     }
   } while (iss);
-  struct result {int ** polynomial; int operation;};
-  return result {poly, add};
+  struct result {int ** polynomial; int operation; set <int> to_display;};
+  return result {poly, add, items_to_display};
 }
 
 int main(int argc, char** argv){
-  auto [poly, operation] = readPoly(argv[1]);
+  auto [poly, operation, results_to_display] = readPoly(argv[1]);
   int * poly_result;
   if (operation == 0){
     poly_result = mulPoly(poly);
@@ -90,6 +102,6 @@ int main(int argc, char** argv){
   else {
     poly_result = sqPoly(poly);
   }
-  writePoly(poly_result);
+  writePoly2(poly_result, results_to_display);
   return 0;
 }
