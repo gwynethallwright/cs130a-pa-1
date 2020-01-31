@@ -13,17 +13,19 @@ void writePoly(long * coeffs){
 }
 
 long * addPoly(long ** coeffs){
-  static long * poly;
-  poly = new long[10000];
+  static long polynomial [10000];
+  long * poly;
+  poly = polynomial;
   for (int i = 0; i < 10000; ++i){
-    poly[i] = (poly[i] + coeffs[0][i] + coeffs[1][i])%1000000;
+    polynomial[i] = (polynomial[i] + coeffs[0][i] + coeffs[1][i])%1000000;
   }
   return poly;
 }
 
 long * mulPoly(long ** coeffs){
-  static long * poly;
-  poly = new long[10000];
+  static long polynomial [10000];
+  long * poly;
+  poly = polynomial;
   for (int i = 0; i < 10000; ++i){
     for (int j = 0; j < 10000; ++j){
       poly[(i+j)%10000] = (poly[(i+j)%10000] + coeffs[0][i] * coeffs[1][j])%1000000;
@@ -33,8 +35,9 @@ long * mulPoly(long ** coeffs){
 }
 
 long * sqPoly(long ** coeffs){
-  static long * poly;
-  poly = new long[10000];
+  static long polynomial [10000];
+  long * poly;
+  poly = polynomial;
   for (int i = 0; i < 10000; ++i){
     for (int j = 0; j < 10000; ++j){
       poly[(i+j)%10000] = (poly[(i+j)%10000] + coeffs[0][i]*coeffs[0][j])%1000000;
@@ -46,10 +49,24 @@ long * sqPoly(long ** coeffs){
 auto readPoly(string input){
   string current;
   long power;
+  /*
   static long ** poly;
   poly = new long * [2];
   poly[0] = new long[10000];
   poly[1] = new long[10000];
+  */
+  static long polynomial_1 [10000];
+  static long polynomial_2 [10000];
+  long * poly_1;
+  long * poly_2;
+  long ** poly;
+  poly_1 = polynomial_1;
+  poly_2 = polynomial_2;
+  static long * big_polynomial[2];
+  big_polynomial[0] = poly_1;
+  big_polynomial[1] = poly_2;
+  poly = big_polynomial;
+
   int i = 0;
   int add = 1;
   istringstream iss(input);
