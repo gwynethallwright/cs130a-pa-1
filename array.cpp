@@ -1,10 +1,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <set>
 using namespace std;
 
-void writePoly(int * coeffs){
+void writePoly(long * coeffs){
   for (int i = 0; i < 10000; ++i){
     if (coeffs[i] != 0){
       cout << coeffs[i] << " " << i << " ";
@@ -13,73 +12,49 @@ void writePoly(int * coeffs){
   cout << "\n";
 }
 
-void writePoly2(int * coeffs, set <int> * to_display){
-  std::set<int>::iterator it = to_display->begin();
-  while (it != to_display->end()){
-    cout << coeffs[(*it)] << " " << (*it) << " ";
-    it++;
-  }
-  cout << "\n";
-}
-
-int * addPoly(int ** coeffs, set <int> * accessed){
-  static int * poly;
-  poly = new int[10000];
-  std::set<int>::iterator it = accessed->begin();
-  while (it != accessed->end()){
-    poly[*it] = (coeffs[0][*it] + coeffs[1][*it])%1000000;
-    it++;
+long * addPoly(long ** coeffs){
+  static long * poly;
+  poly = new long[10000];
+  for (int i = 0; i < 10000; ++i){
+    poly[i] = (poly[i] + coeffs[0][i] + coeffs[1][i])%1000000;
   }
   return poly;
 }
 
-int * mulPoly(int ** coeffs, set <int> * accessed){
-  static int * poly;
-  poly = new int[10000];
-  set <int> add_to_accessed;
-  std::set<int>::iterator it = accessed->begin();
-  while (it != accessed->end()){
-    std::set<int>::iterator it2 = accessed->begin();
-    while (it2 != accessed->end()){
-      poly[((*it)+(*it2))%10000] = poly[((*it)+(*it2))%10000] + (coeffs[0][*it]*coeffs[1][*it2])%1000000;
-      it2++;
-      add_to_accessed.insert(((*it)+(*it2))%10000);
+long * mulPoly(long ** coeffs){
+  static long * poly;
+  poly = new long[10000];
+  for (int i = 0; i < 10000; ++i){
+    for (int j = 0; j < 10000; ++j){
+      poly[(i+j)%10000] = (poly[(i+j)%10000] + coeffs[0][i] * coeffs[1][j])%1000000;
     }
-    it++;
   }
-  accessed->insert(add_to_accessed.begin(), add_to_accessed.end());
   return poly;
 }
 
-int * sqPoly(int ** coeffs, set <int> * accessed){
-  static int * poly;
-  poly = new int[10000];
-  std::set<int>::iterator it = accessed->begin();
-  while (it != accessed->end()){
-    std::set<int>::iterator it2 = accessed->begin();
-    while (it2 != accessed->end()){
-      poly[((*it)+(*it2))%10000] = poly[((*it)+(*it2))%10000] + (coeffs[0][*it]*coeffs[0][*it2])%1000000;
-      it2++;
+long * sqPoly(long ** coeffs){
+  static long * poly;
+  poly = new long[10000];
+  for (int i = 0; i < 10000; ++i){
+    for (int j = 0; j < 10000; ++j){
+      poly[(i+j)%10000] = (poly[(i+j)%10000] + coeffs[0][i]*coeffs[0][j])%1000000;
     }
-    it++;
   }
   return poly;
 }
 
 auto readPoly(string input){
   string current;
-  int power;
-  static int ** poly;
-  poly = new int * [2];
-  poly[0] = new int[10000];
-  poly[1] = new int[10000];
+  long power;
+  static long ** poly;
+  poly = new long * [2];
+  poly[0] = new long[10000];
+  poly[1] = new long[10000];
   int i = 0;
   int add = 1;
-  set <int> * accessed;
-  accessed = new set <int>;
   istringstream iss(input);
-  do{
-    iss >> current;
+  iss >> current;
+  while (iss){
     if (current == "+"){
       i = i+1;
     }
@@ -93,26 +68,28 @@ auto readPoly(string input){
     }
     else {
       iss >> power;
-      poly[i][power%10000] = stoi(current)%1000000;
-      accessed->insert(power%10000);
+      poly[i][power%10000] = (poly[i][power%10000] + stoi(current))%1000000;
     }
-  } while (iss);
-  struct result {int ** polynomial; int operation; set <int> * accessed;};
-  return result {poly, add, accessed};
+    iss >> current;
+  }
+  struct result {long ** polynomial; int operation;};
+  return result {poly, add};
 }
 
 int main(int argc, char** argv){
-  auto [poly, operation, accessed] = readPoly(argv[1]);
-  int * poly_result;
+  auto [poly, operation] = readPoly(argv[1]);
+  long * poly_result;
   if (operation == 0){
-    poly_result = mulPoly(poly, accessed);
+    poly_result = mulPoly(poly);
   }
   else if (operation == 1){
-    poly_result = addPoly(poly, accessed);
+    poly_result = addPoly(poly);
   }
   else {
-    poly_result = sqPoly(poly, accessed);
+    poly_result = sqPoly(poly);
   }
-  writePoly2(poly_result, accessed);
+  writePoly(poly_result);
   return 0;
+  delete (poly);
+  delete (poly_result);
 }
