@@ -42,7 +42,7 @@ auto find(struct node * head, long power) {
    struct result {node * pointer; int perfect_match;};
    while (ptr->next != NULL) {
       if (ptr->next->power == power){
-         return result {ptr->next, 1};
+         return result {ptr, 1};
       }
       else if (ptr->next->power > power){
          return result {ptr, 0};
@@ -105,8 +105,31 @@ struct node * mulPoly(struct node * poly_1, struct node * poly_2) {
    struct node * ptr_3 = &return_poly;
    while (ptr_1 != NULL) {
       while (ptr_2 != NULL) {
-
+         auto [ptr, found] = find(address, (ptr_1->power+ptr_2->power)%10000);
+         if (found == 1){
+            /* If the new coefficient is nonzero, update it. */
+            if ((ptr->next->coeff + ptr_1->coeff*ptr_2->coeff)%1000000 != 0){
+               ptr->next->coeff = (ptr->next->coeff + ptr_1->coeff*ptr_2->coeff)%1000000;
+            }
+            /* If the new coefficient is zero, delete that node. */
+            else if (ptr->next->next == NULL) {
+               delete_at_end(ptr);
+            }
+            else {
+               delete_in_middle(ptr);
+            }
+         }
+         else if (found == 0) {
+            insert_in_middle(ptr, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%1000);
+            ptr = ptr_3->next;
+         }
+         else {
+            insert_at_end(ptr_3, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%1000);
+            ptr_3 = ptr_3->next;
+         }
+         ptr_2 = ptr_2->next;
       }
+      ptr_1 = ptr_1->next;
       ptr_2 = poly_2->next;
    }
    return address;
@@ -157,10 +180,12 @@ int main(int argc, char** argv) {
    auto [poly_1, poly_2, operation] = readPoly(argv[1]);
    writePoly(poly_1);
    writePoly(poly_2);
-   struct node * new_poly = addPoly(poly_1, poly_2);
+   struct node * new_poly = mulPoly(poly_1, poly_2);
    writePoly(new_poly);
+   /*
    auto [ptr, found] = find(poly_1, 4);
    cout << found << "\n";
    cout << (ptr->coeff) << "\n";
+   */
    return 0;
 } 
