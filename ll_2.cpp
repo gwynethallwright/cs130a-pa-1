@@ -96,7 +96,7 @@ struct node * addPoly(struct node * poly_1, struct node * poly_2) {
          ptr_2 = ptr_2->next;
       }
       else{
-         insert_at_end(ptr_3, (ptr_1->power+ptr_2->power)%10000, (ptr_1->coeff+ptr_2->coeff)%1000000);
+         insert_at_end(ptr_3, (ptr_1->coeff+ptr_2->coeff)%1000000, ptr_1->power);
          ptr_1 = ptr_1->next;
          ptr_2 = ptr_2->next;
       }
