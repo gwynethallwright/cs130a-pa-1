@@ -114,33 +114,35 @@ struct node * mulPoly(struct node * poly_1, struct node * poly_2) {
    struct node * ptr_3 = &return_poly;
    while (ptr_1 != NULL) {
       while (ptr_2 != NULL) {
-         auto [ptr, found] = find(address, (ptr_1->power+ptr_2->power)%10000);
-         if (found == 1){
-            cout << "found_1 \n";
-            /* If the new coefficient is nonzero, update it. */
-            if ((ptr->next->coeff + ptr_1->coeff*ptr_2->coeff)%1000000 != 0){
-               ptr->next->coeff = (ptr->next->coeff + ptr_1->coeff*ptr_2->coeff)%1000000;
+         if ((ptr_1->coeff*ptr_2->coeff)%1000000 != 0){
+            auto [ptr, found] = find(address, (ptr_1->power+ptr_2->power)%10000);
+            if (found == 1){
+               cout << "found_1 \n";
+               /* If the new coefficient is nonzero, update it. */
+               if ((ptr->next->coeff + ptr_1->coeff*ptr_2->coeff)%1000000 != 0){
+                  ptr->next->coeff = (ptr->next->coeff + ptr_1->coeff*ptr_2->coeff)%1000000;
+               }
+               /* If the new coefficient is zero, delete that node. */
+               else if (ptr->next->next == NULL) {
+                  delete_at_end(ptr);
+                  ptr_3 = find_end_of_list(address);
+               }
+               else {
+                  delete_in_middle(ptr);
+               }
+               writePoly(address);
             }
-            /* If the new coefficient is zero, delete that node. */
-            else if (ptr->next->next == NULL) {
-               delete_at_end(ptr);
-               ptr_3 = find_end_of_list(address);
+            else if (found == 0) {
+               cout << "found_0 \n";
+               insert_in_middle(ptr, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%10000);
+               writePoly(address);
             }
             else {
-               delete_in_middle(ptr);
+               cout << "found_-1 \n";
+               insert_at_end(ptr_3, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%10000);
+               writePoly(address);
+               ptr_3 = ptr_3->next;
             }
-            writePoly(address);
-         }
-         else if (found == 0) {
-            cout << "found_0 \n";
-            insert_in_middle(ptr, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%10000);
-            writePoly(address);
-         }
-         else {
-            cout << "found_-1 \n";
-            insert_at_end(ptr_3, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%10000);
-            writePoly(address);
-            ptr_3 = ptr_3->next;
          }
          ptr_2 = ptr_2->next;
       }
