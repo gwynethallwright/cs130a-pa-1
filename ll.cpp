@@ -37,13 +37,13 @@ void delete_at_end(struct node * prev) {
    free(temp);
 }
 
-void display(struct node * head) { 
-   struct node* ptr;
-   ptr = head;
+void writePoly(struct node * head) { 
+   struct node * ptr = head->next;
    while (ptr != NULL) { 
-      cout<< ptr->coeff <<" "; 
+      cout << ptr->coeff << " " << ptr->power << " "; 
       ptr = ptr->next; 
-   } 
+   }
+   cout << "\n";
 }
 
 auto readPoly(string input){
@@ -53,7 +53,6 @@ auto readPoly(string input){
   istringstream iss(input);
   iss >> current;
   long power;
-  int i = 0;
   int operation = 1;
   struct node * ptr = poly_1;
   while (iss){
@@ -95,7 +94,7 @@ int main(int argc, char** argv) {
    delete_at_end(head->next->next->next->next->next->next);
    cout<<"The linked list is: ";
    */
-   display(poly_1);
-   display(poly_2);
+   writePoly(poly_1);
+   writePoly(poly_2);
    return 0; 
 } 
