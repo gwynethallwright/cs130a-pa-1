@@ -1,102 +1,59 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <set>
 using namespace std;
 
 const unsigned long max_coeff = 1000000;
 const unsigned long max_power = 10000;
 
-void writePoly(long * coeffs, set <int> * to_display){
-  std::set<int>::iterator it = to_display->begin();
-  while (it != to_display->end()){
-    cout << coeffs[*it] << " " << (*it) << " ";
-    it++;
+void writePoly(long * coeffs){
+  for (int i = 0; i < max_power; ++i){
+    if (coeffs[i] != 0){
+      cout << coeffs[i] << " " << i << " ";
+    }
   }
   cout << "\n";
 }
 
-long * addPoly(long ** coeffs, set <int> * accessed){
+long * addPoly(long ** coeffs){
   static long polynomial [max_power];
   long * poly;
   poly = polynomial;
-  set <int> add_to_accessed;
-  std::set<int>::iterator it = accessed->begin();
-  while (it != accessed->end()){
-    poly[*it] = (poly[*it] + coeffs[0][*it] + coeffs[1][*it])%max_coeff;
-    if ((poly[*it] + coeffs[0][*it] + coeffs[1][*it]) != 0){
-      add_to_accessed.insert(*it);
-    }
-    it++;
+  for (int i = 0; i < max_power; ++i){
+    polynomial[i] = (polynomial[i] + coeffs[0][i] + coeffs[1][i])%max_coeff;
   }
   return poly;
 }
 
-long * mulPoly(long ** coeffs, set <int> * accessed){
+long * mulPoly(long ** coeffs){
   static long polynomial [max_power];
   long * poly;
   poly = polynomial;
-  set <int> add_to_accessed;
-  set <int> remove_from_accessed;
-
-  std::set<int>::iterator it = accessed->begin();
-  while (it != accessed->end()){
-    std::set<int>::iterator it2 = accessed->begin();
-    while (it2 != accessed->end()){
-      poly[((*it)+(*it2))%max_power] = (poly[((*it)+(*it2))%max_power] + coeffs[0][*it]*coeffs[1][*it2])%max_coeff;
-      if ((poly[((*it)+(*it2))%max_power] + coeffs[0][*it]*coeffs[1][*it2]) != 0){
-        add_to_accessed.insert(((*it)+(*it2))%max_power);
-      }
-      remove_from_accessed.insert(*it2);
-      it2++;
+  for (int i = 0; i < max_power; ++i){
+    for (int j = 0; j < max_power; ++j){
+      poly[(i+j)%max_power] = (poly[(i+j)%max_power] + coeffs[0][i] * coeffs[1][j])%max_coeff;
     }
-    remove_from_accessed.insert(*it);
-    it++;
   }
-  std::set<int>::iterator it3 = remove_from_accessed.begin();
-  while (it3 != remove_from_accessed.end()){
-    accessed->erase(*it3);
-    it3++;
-  }
-  accessed->insert(add_to_accessed.begin(), add_to_accessed.end());
   return poly;
 }
 
-long * sqPoly(long ** coeffs, set <int> * accessed){
+long * sqPoly(long ** coeffs){
   static long polynomial [max_power];
   long * poly;
   poly = polynomial;
-  set <int> add_to_accessed;
-  set <int> remove_from_accessed;
-
-  std::set<int>::iterator it = accessed->begin();
-  while (it != accessed->end()){
-    std::set<int>::iterator it2 = accessed->begin();
-    while (it2 != accessed->end()){
-      poly[((*it)+(*it2))%max_power] = (poly[((*it)+(*it2))%max_power] + coeffs[0][*it]*coeffs[0][*it2])%max_coeff;
-      if ((poly[((*it)+(*it2))%max_power] + coeffs[0][*it]*coeffs[0][*it2]) != 0){
-        add_to_accessed.insert(((*it)+(*it2))%max_power);
-      }
-      remove_from_accessed.insert(*it2);
-      it2++;
+  for (int i = 0; i < max_power; ++i){
+    for (int j = 0; j < max_power; ++j){
+      poly[(i+j)%max_power] = (poly[(i+j)%max_power] + coeffs[0][i]*coeffs[0][j])%max_coeff;
     }
-    remove_from_accessed.insert(*it);
-    it++;
   }
-  std::set<int>::iterator it3 = remove_from_accessed.begin();
-  while (it3 != remove_from_accessed.end()){
-    accessed->erase(*it3);
-    it3++;
-  }
-  accessed->insert(add_to_accessed.begin(), add_to_accessed.end());
   return poly;
 }
 
 auto readPoly(string input){
   string current;
   long power;
-  static long polynomial_1 [max_power];
-  static long polynomial_2 [max_power];
+  static long polynomial_1[max_power];
+  static long polynomial_2[max_power];
   long * poly_1;
   long * poly_2;
   long ** poly;
@@ -106,50 +63,46 @@ auto readPoly(string input){
   big_polynomial[0] = poly_1;
   big_polynomial[1] = poly_2;
   poly = big_polynomial;
+
   int i = 0;
-  int add = 1;
-  set <int> * accessed;
-  static set <int> access;
-  accessed = &access;
+  int operation = 1;
   istringstream iss(input);
   iss >> current;
+
   while (iss){
     if (current == "+"){
       i = i+1;
     }
     else if (current == "*"){
       i = i+1;
-      add = 0;
+      operation = 0;
     }
     else if (current == "**"){
-      add = 2;
+      operation = 2;
       break;
     }
     else {
       iss >> power;
       poly[i][power%max_power] = (poly[i][power%max_power] + stoi(current))%max_coeff;
-      if (((poly[i][power%max_power] + stoi(current))%max_power) != 0){
-        accessed->insert(power%max_power);
-      }
     }
     iss >> current;
   }
-  struct result {long ** polynomial; int operation; set <int> * accessed;};
-  return result {poly, add, accessed};
+  struct result {long ** polynomial; int operation;};
+  return result {poly, operation};
 }
 
 int main(int argc, char** argv){
-  auto [poly, operation, accessed] = readPoly(argv[1]);
+  auto [poly, operation] = readPoly(argv[1]);
   long * poly_result;
   if (operation == 0){
-    poly_result = mulPoly(poly, accessed);
+    poly_result = mulPoly(poly);
   }
   else if (operation == 1){
-    poly_result = addPoly(poly, accessed);
+    poly_result = addPoly(poly);
   }
   else {
-    poly_result = sqPoly(poly, accessed);
+    poly_result = sqPoly(poly);
   }
-  writePoly(poly_result, accessed);
+  writePoly(poly_result);
   return 0;
 }

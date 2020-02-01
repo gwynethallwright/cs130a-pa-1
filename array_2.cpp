@@ -3,8 +3,11 @@
 #include <string>
 using namespace std;
 
+const unsigned long max_coeff = 1000000;
+const unsigned long max_power = 10000;
+
 void writePoly(long * coeffs){
-  for (int i = 0; i < 10000; ++i){
+  for (int i = 0; i < max_power; ++i){
     if (coeffs[i] != 0){
       cout << coeffs[i] << " " << i << " ";
     }
@@ -13,34 +16,34 @@ void writePoly(long * coeffs){
 }
 
 long * addPoly(long ** coeffs){
-  static long polynomial [10000];
+  static long polynomial [max_power];
   long * poly;
   poly = polynomial;
-  for (int i = 0; i < 10000; ++i){
-    polynomial[i] = (polynomial[i] + coeffs[0][i] + coeffs[1][i])%1000000;
+  for (int i = 0; i < max_power; ++i){
+    polynomial[i] = (polynomial[i] + coeffs[0][i] + coeffs[1][i])%max_coeff;
   }
   return poly;
 }
 
 long * mulPoly(long ** coeffs){
-  static long polynomial [10000];
+  static long polynomial [max_power];
   long * poly;
   poly = polynomial;
-  for (int i = 0; i < 10000; ++i){
-    for (int j = 0; j < 10000; ++j){
-      poly[(i+j)%10000] = (poly[(i+j)%10000] + coeffs[0][i] * coeffs[1][j])%1000000;
+  for (int i = 0; i < max_power; ++i){
+    for (int j = 0; j < max_power; ++j){
+      poly[(i+j)%max_power] = (poly[(i+j)%max_power] + coeffs[0][i] * coeffs[1][j])%max_coeff;
     }
   }
   return poly;
 }
 
 long * sqPoly(long ** coeffs){
-  static long polynomial [10000];
+  static long polynomial [max_power];
   long * poly;
   poly = polynomial;
-  for (int i = 0; i < 10000; ++i){
-    for (int j = 0; j < 10000; ++j){
-      poly[(i+j)%10000] = (poly[(i+j)%10000] + coeffs[0][i]*coeffs[0][j])%1000000;
+  for (int i = 0; i < max_power; ++i){
+    for (int j = 0; j < max_power; ++j){
+      poly[(i+j)%max_power] = (poly[(i+j)%max_power] + coeffs[0][i]*coeffs[0][j])%max_coeff;
     }
   }
   return poly;
@@ -49,14 +52,8 @@ long * sqPoly(long ** coeffs){
 auto readPoly(string input){
   string current;
   long power;
-  /*
-  static long ** poly;
-  poly = new long * [2];
-  poly[0] = new long[10000];
-  poly[1] = new long[10000];
-  */
-  static long polynomial_1 [10000];
-  static long polynomial_2 [10000];
+  static long polynomial_1[max_power];
+  static long polynomial_2[max_power];
   long * poly_1;
   long * poly_2;
   long ** poly;
@@ -68,7 +65,7 @@ auto readPoly(string input){
   poly = big_polynomial;
 
   int i = 0;
-  int add = 1;
+  int operation = 1;
   istringstream iss(input);
   iss >> current;
 
@@ -78,20 +75,20 @@ auto readPoly(string input){
     }
     else if (current == "*"){
       i = i+1;
-      add = 0;
+      operation = 0;
     }
     else if (current == "**"){
-      add = 2;
+      operation = 2;
       break;
     }
     else {
       iss >> power;
-      poly[i][power%10000] = (poly[i][power%10000] + stoi(current))%1000000;
+      poly[i][power%max_power] = (poly[i][power%max_power] + stoi(current))%max_coeff;
     }
     iss >> current;
   }
   struct result {long ** polynomial; int operation;};
-  return result {poly, add};
+  return result {poly, operation};
 }
 
 int main(int argc, char** argv){
