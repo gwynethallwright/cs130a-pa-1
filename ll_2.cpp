@@ -21,7 +21,7 @@ void insert_in_middle(struct node * prev, int new_coeff, int new_power) {
    struct node * new_node = (struct node*) malloc(sizeof(struct node));
    new_node->coeff = new_coeff;
    new_node->power = new_power;
-   new_node->next = (prev->next)->next;
+   new_node->next = prev->next;
    prev->next = new_node;
 }
 
@@ -107,6 +107,7 @@ struct node * mulPoly(struct node * poly_1, struct node * poly_2) {
       while (ptr_2 != NULL) {
          auto [ptr, found] = find(address, (ptr_1->power+ptr_2->power)%10000);
          if (found == 1){
+            cout << "found_1 \n";
             /* If the new coefficient is nonzero, update it. */
             if ((ptr->next->coeff + ptr_1->coeff*ptr_2->coeff)%1000000 != 0){
                ptr->next->coeff = (ptr->next->coeff + ptr_1->coeff*ptr_2->coeff)%1000000;
@@ -120,11 +121,14 @@ struct node * mulPoly(struct node * poly_1, struct node * poly_2) {
             }
          }
          else if (found == 0) {
+            cout << "found_0 \n";
             insert_in_middle(ptr, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%1000);
-            ptr = ptr_3->next;
+            writePoly(address);
          }
          else {
+            cout << "found_-1 \n";
             insert_at_end(ptr_3, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%1000);
+            writePoly(address);
             ptr_3 = ptr_3->next;
          }
          ptr_2 = ptr_2->next;
