@@ -54,6 +54,14 @@ auto find(struct node * head, long power) {
    return result {ptr, -1};
 }
 
+auto find_end_of_list(struct node * head) {
+   struct node * ptr = head;
+   while (ptr->next != NULL) {
+      ptr = ptr->next;
+   }
+   return ptr;
+}
+
 void writePoly(struct node * head) { 
    struct node * ptr = head->next;
    while (ptr != NULL) { 
@@ -62,6 +70,7 @@ void writePoly(struct node * head) {
    }
    cout << "\n";
 }
+
 
 auto readPoly(string input){
   static struct node actual_1;
@@ -115,10 +124,12 @@ struct node * mulPoly(struct node * poly_1, struct node * poly_2) {
             /* If the new coefficient is zero, delete that node. */
             else if (ptr->next->next == NULL) {
                delete_at_end(ptr);
+               ptr_3 = find_end_of_list(address);
             }
             else {
                delete_in_middle(ptr);
             }
+            writePoly(address);
          }
          else if (found == 0) {
             cout << "found_0 \n";
@@ -186,6 +197,7 @@ int main(int argc, char** argv) {
    writePoly(poly_2);
    struct node * new_poly = mulPoly(poly_1, poly_2);
    writePoly(new_poly);
+   cout << find_end_of_list(poly_1)->coeff << "\n";
    /*
    auto [ptr, found] = find(poly_1, 4);
    cout << found << "\n";
