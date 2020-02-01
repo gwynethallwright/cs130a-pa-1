@@ -80,6 +80,21 @@ auto readPoly(string input){
   return result {poly_1, poly_2, operation};
 }
 
+struct node * mulPoly(struct node * poly_1, struct node * poly_2) {
+   struct node * ptr_1 = poly_1->next;
+   struct node * ptr_2 = poly_2->next;
+   static struct node return_poly;
+   static struct node * address = &return_poly;
+   struct node * ptr_3 = &return_poly;
+   while (ptr_1 != NULL) {
+      while (ptr_2 != NULL) {
+
+      }
+      ptr_2 = poly_2->next;
+   }
+   return address;
+}
+
 struct node * addPoly(struct node * poly_1, struct node * poly_2) {
    struct node * ptr_1 = poly_1->next;
    struct node * ptr_2 = poly_2->next;
@@ -90,17 +105,23 @@ struct node * addPoly(struct node * poly_1, struct node * poly_2) {
       if ((ptr_1->power) < (ptr_2->power)){
          insert_at_end(ptr_3, ptr_1->coeff, ptr_1->power);
          ptr_1 = ptr_1->next;
+         ptr_3 = ptr_3->next;
       }
       else if ((ptr_2->power) < (ptr_1->power)){
          insert_at_end(ptr_3, ptr_2->coeff, ptr_2->power);
          ptr_2 = ptr_2->next;
+         ptr_3 = ptr_3->next;
       }
-      else{
+      else if (((ptr_1->coeff+ptr_2->coeff)%1000000) != 0) {
          insert_at_end(ptr_3, (ptr_1->coeff+ptr_2->coeff)%1000000, ptr_1->power);
          ptr_1 = ptr_1->next;
          ptr_2 = ptr_2->next;
+         ptr_3 = ptr_3->next;
       }
-      ptr_3 = ptr_3->next;
+      else {
+         ptr_1 = ptr_1->next;
+         ptr_2 = ptr_2->next;
+      }
    }
    while (ptr_1 != NULL) {
       insert_at_end(ptr_3, ptr_1->coeff, ptr_1->power);
@@ -112,7 +133,6 @@ struct node * addPoly(struct node * poly_1, struct node * poly_2) {
       ptr_3 = ptr_3->next;
       ptr_2 = ptr_2->next;
    }
-   writePoly(address);
    return address;
 }
 
