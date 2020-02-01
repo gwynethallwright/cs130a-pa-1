@@ -1,4 +1,6 @@
 #include <iostream>
+#include <sstream>
+#include <string>
 using namespace std;
 
 struct node { 
@@ -44,8 +46,43 @@ void display(struct node * head) {
    } 
 }
 
-int main() { 
-   struct node * head;
+auto readPoly(string input){
+  struct node * poly_1;
+  struct node * poly_2;
+  string current;
+  istringstream iss(input);
+  iss >> current;
+  long power;
+  int i = 0;
+  int operation = 1;
+  struct node * ptr = poly_1;
+  while (iss){
+    if (current == "+"){
+      ptr = poly_2;
+      i = i+1;
+    }
+    else if (current == "*"){
+      ptr = poly_2;
+      operation = 0;
+    }
+    else if (current == "**"){
+      operation = 2;
+      break;
+    }
+    else {
+      iss >> power;
+      insert_at_end(ptr, stoi(current), power);
+      ptr = ptr->next;
+    }
+    iss >> current;
+  }
+  struct result {struct node * polynomial_1; struct node * polynomial_2; int operation;};
+  return result {poly_1, poly_2, operation};
+}
+
+int main(int argc, char** argv) { 
+   auto [poly_1, poly_2, operation] = readPoly(argv[1]);
+   /*
    struct node * ptr;
    head->coeff = 30;
    head->next = NULL;
@@ -57,6 +94,8 @@ int main() {
    delete_in_middle(head->next->next->next);
    delete_at_end(head->next->next->next->next->next->next);
    cout<<"The linked list is: ";
-   display(head);
+   */
+   display(poly_1);
+   display(poly_2);
    return 0; 
 } 
