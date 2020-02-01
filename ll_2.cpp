@@ -46,38 +46,11 @@ void writePoly(struct node * head) {
    cout << "\n";
 }
 
-/*
-struct node * addPoly(struct node * poly_1, struct node * poly_2) {
-   struct node * ptr_1 = poly_1->next;
-   struct node * ptr_2 = poly_2->next;
-   struct node * return_poly;
-   struct node * ptr_3 = return_poly;
-   insert_at_end(ptr_3, 40, 41);
-   while ((ptr_1 != NULL) && (ptr_2 != NULL)) {
-      insert_at_end(ptr_3, ptr_1->coeff, ptr_1->power);
-      ptr_1 = ptr_1->next;
-      ptr_2 = ptr_2->next;
-      
-      if ((ptr_1->power) < (ptr_2->power)){
-         insert_at_end(ptr_3, ptr_1->coeff, ptr_1->power);
-         ptr_1 = ptr_1->next;
-      }
-      else if ((ptr_2->power) < (ptr_1->power)){
-         insert_at_end(ptr_3, ptr_2->coeff, ptr_2->power);
-         ptr_2 = ptr_2->next;
-      }
-      else{
-         insert_at_end(ptr_3, (ptr_1->power+ptr_2->power)%10000, (ptr_1->coeff+ptr_2->coeff)%1000000);
-      }
-      ptr_3 = ptr_3->next;
-   }
-   return return_poly;
-}
-*/
-
 auto readPoly(string input){
-  struct node * poly_1;
-  struct node * poly_2;
+  static struct node actual_1;
+  static struct node actual_2;
+  static struct node * poly_1 = &actual_1;
+  static struct node * poly_2 = &actual_2;
   string current;
   istringstream iss(input);
   iss >> current;
@@ -107,36 +80,56 @@ auto readPoly(string input){
   return result {poly_1, poly_2, operation};
 }
 
+/*
 int main(int argc, char** argv) { 
    auto [poly_1, poly_2, operation] = readPoly(argv[1]);
    writePoly(poly_1);
    writePoly(poly_2);
-   /*
-   struct node * poly_3 = addPoly(poly_1, poly_2);
-   if (operation == 0){
-      cout << "case 0 ";
-      poly_result = mulPoly(poly_1, poly_2);
+   return 0; 
+}*/
+
+auto addPoly(struct node * poly_1, struct node * poly_2) {
+   struct node * ptr_1 = poly_1->next;
+   struct node * ptr_2 = poly_2->next;
+   static struct node return_poly;
+   static struct node * address = &return_poly;
+   struct node * ptr_3 = &return_poly;
+   while ((ptr_1 != NULL) && (ptr_2 != NULL)) {
+      if ((ptr_1->power) < (ptr_2->power)){
+         insert_at_end(ptr_3, ptr_1->coeff, ptr_1->power);
+         ptr_1 = ptr_1->next;
+      }
+      else if ((ptr_2->power) < (ptr_1->power)){
+         insert_at_end(ptr_3, ptr_2->coeff, ptr_2->power);
+         ptr_2 = ptr_2->next;
+      }
+      else{
+         insert_at_end(ptr_3, (ptr_1->power+ptr_2->power)%10000, (ptr_1->coeff+ptr_2->coeff)%1000000);
+         ptr_1 = ptr_1->next;
+         ptr_2 = ptr_2->next;
+      }
+      ptr_3 = ptr_3->next;
    }
-   else if (operation == 1){
-      cout << "case 1 ";
-      poly_3 = addPoly(poly_1, poly_2);
+   while (ptr_1 != NULL) {
+      insert_at_end(ptr_3, ptr_1->coeff, ptr_1->power);
+      ptr_3 = ptr_3->next;
+      ptr_1 = ptr_1->next;
    }
-   else {
-      cout << "case 3 ";
-      poly_result = sqPoly(poly_1);
+   while (ptr_2 != NULL) {
+      insert_at_end(ptr_3, ptr_2->coeff, ptr_2->power);
+      ptr_3 = ptr_3->next;
+      ptr_2 = ptr_2->next;
    }
-   writePoly(poly_result);
-   struct node * ptr;
-   head->coeff = 30;
-   head->next = NULL;
-   ptr = head;
-   for (int i = 0; i < 10; ++i){
-      insert_at_end(ptr, i, i);
-      ptr = ptr->next;
-   }
-   delete_in_middle(head->next->next->next);
-   delete_at_end(head->next->next->next->next->next->next);
-   cout<<"The linked list is: ";
-   */
-   return 0;
+   writePoly(address);
+   struct result {struct node * polynomial;};
+   return result {address};
+}
+
+int main(int argc, char** argv) { 
+   auto [poly_1, poly_2, operation] = readPoly(argv[1]);
+   writePoly(poly_1);
+   writePoly(poly_2);
+   auto [new_poly] = addPoly(poly_1, poly_2);
+   writePoly(new_poly);
+   return 0; 
 } 
