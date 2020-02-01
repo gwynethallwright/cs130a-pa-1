@@ -133,12 +133,12 @@ struct node * mulPoly(struct node * poly_1, struct node * poly_2) {
          }
          else if (found == 0) {
             cout << "found_0 \n";
-            insert_in_middle(ptr, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%1000);
+            insert_in_middle(ptr, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%10000);
             writePoly(address);
          }
          else {
             cout << "found_-1 \n";
-            insert_at_end(ptr_3, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%1000);
+            insert_at_end(ptr_3, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%10000);
             writePoly(address);
             ptr_3 = ptr_3->next;
          }
