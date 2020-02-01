@@ -117,7 +117,6 @@ struct node * mulPoly(struct node * poly_1, struct node * poly_2) {
          if ((ptr_1->coeff*ptr_2->coeff)%1000000 != 0){
             auto [ptr, found] = find(address, (ptr_1->power+ptr_2->power)%10000);
             if (found == 1){
-               cout << "found_1 \n";
                /* If the new coefficient is nonzero, update it. */
                if ((ptr->next->coeff + ptr_1->coeff*ptr_2->coeff)%1000000 != 0){
                   ptr->next->coeff = (ptr->next->coeff + ptr_1->coeff*ptr_2->coeff)%1000000;
@@ -130,17 +129,12 @@ struct node * mulPoly(struct node * poly_1, struct node * poly_2) {
                else {
                   delete_in_middle(ptr);
                }
-               writePoly(address);
             }
             else if (found == 0) {
-               cout << "found_0 \n";
                insert_in_middle(ptr, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%10000);
-               writePoly(address);
             }
             else {
-               cout << "found_-1 \n";
                insert_at_end(ptr_3, (ptr_1->coeff*ptr_2->coeff)%1000000, (ptr_1->power+ptr_2->power)%10000);
-               writePoly(address);
                ptr_3 = ptr_3->next;
             }
          }
@@ -150,6 +144,10 @@ struct node * mulPoly(struct node * poly_1, struct node * poly_2) {
       ptr_2 = poly_2->next;
    }
    return address;
+}
+
+struct node * sqPoly(struct node * poly_1){
+   return mulPoly(poly_1, poly_1);
 }
 
 struct node * addPoly(struct node * poly_1, struct node * poly_2) {
@@ -195,15 +193,16 @@ struct node * addPoly(struct node * poly_1, struct node * poly_2) {
 
 int main(int argc, char** argv) { 
    auto [poly_1, poly_2, operation] = readPoly(argv[1]);
-   writePoly(poly_1);
-   writePoly(poly_2);
    struct node * new_poly = mulPoly(poly_1, poly_2);
+   if (operation == 0){
+     new_poly = mulPoly(poly_1, poly_2);
+   }
+   else if (operation == 1){
+     new_poly = addPoly(poly_1, poly_2);
+   }
+   else {
+     new_poly = sqPoly(poly_1);
+   }
    writePoly(new_poly);
-   cout << find_end_of_list(poly_1)->coeff << "\n";
-   /*
-   auto [ptr, found] = find(poly_1, 4);
-   cout << found << "\n";
-   cout << (ptr->coeff) << "\n";
-   */
    return 0;
 } 
