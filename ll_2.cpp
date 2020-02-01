@@ -71,7 +71,6 @@ void writePoly(struct node * head) {
    cout << "\n";
 }
 
-
 auto readPoly(string input){
   static struct node actual_1;
   static struct node actual_2;
@@ -193,7 +192,7 @@ struct node * addPoly(struct node * poly_1, struct node * poly_2) {
 
 int main(int argc, char** argv) { 
    auto [poly_1, poly_2, operation] = readPoly(argv[1]);
-   struct node * new_poly = mulPoly(poly_1, poly_2);
+   struct node * new_poly;
    if (operation == 0){
      new_poly = mulPoly(poly_1, poly_2);
    }
