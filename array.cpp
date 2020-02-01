@@ -4,16 +4,7 @@
 #include <set>
 using namespace std;
 
-void writePoly(long * coeffs){
-  for (int i = 0; i < 10000; ++i){
-    if (coeffs[i] != 0){
-      cout << coeffs[i] << " " << i << " ";
-    }
-  }
-  cout << "\n";
-}
-
-void writePoly2(long * coeffs, set <int> * to_display){
+void writePoly(long * coeffs, set <int> * to_display){
   std::set<int>::iterator it = to_display->begin();
   while (it != to_display->end()){
     cout << coeffs[*it] << " " << (*it) << " ";
@@ -156,6 +147,6 @@ int main(int argc, char** argv){
   else {
     poly_result = sqPoly(poly, accessed);
   }
-  writePoly2(poly_result, accessed);
+  writePoly(poly_result, accessed);
   return 0;
 }
