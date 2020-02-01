@@ -37,6 +37,23 @@ void delete_at_end(struct node * prev) {
    free(temp);
 }
 
+auto find(struct node * head, long power) {
+   struct node * ptr = head;
+   struct result {node * pointer; int perfect_match;};
+   while (ptr->next != NULL) {
+      if (ptr->next->power == power){
+         return result {ptr->next, 1};
+      }
+      else if (ptr->next->power > power){
+         return result {ptr, 0};
+      }
+      else {
+         ptr = ptr->next;
+      }
+   }
+   return result {ptr, -1};
+}
+
 void writePoly(struct node * head) { 
    struct node * ptr = head->next;
    while (ptr != NULL) { 
@@ -142,5 +159,8 @@ int main(int argc, char** argv) {
    writePoly(poly_2);
    struct node * new_poly = addPoly(poly_1, poly_2);
    writePoly(new_poly);
-   return 0; 
+   auto [ptr, found] = find(poly_1, 4);
+   cout << found << "\n";
+   cout << (ptr->coeff) << "\n";
+   return 0;
 } 
