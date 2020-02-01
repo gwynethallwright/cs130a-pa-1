@@ -23,6 +23,18 @@ void insert_in_middle(struct node * prev, int new_coeff, int new_power) {
    prev->next = new_node;
 }
 
+void delete_in_middle(struct node * prev) {
+   struct node * temp = prev->next;
+   prev->next = (prev->next)->next;
+   free(temp);
+}
+
+void delete_at_end(struct node * prev) {
+   struct node * temp = prev->next;
+   prev->next = NULL;
+   free(temp);
+}
+
 void display(struct node * head) { 
    struct node* ptr;
    ptr = head;
@@ -42,6 +54,8 @@ int main() {
       insert_at_end(ptr, i, i);
       ptr = ptr->next;
    }
+   delete_in_middle(head->next->next->next);
+   delete_at_end(head->next->next->next->next->next->next);
    cout<<"The linked list is: ";
    display(head);
    return 0; 
