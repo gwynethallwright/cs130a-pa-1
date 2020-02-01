@@ -80,15 +80,7 @@ auto readPoly(string input){
   return result {poly_1, poly_2, operation};
 }
 
-/*
-int main(int argc, char** argv) { 
-   auto [poly_1, poly_2, operation] = readPoly(argv[1]);
-   writePoly(poly_1);
-   writePoly(poly_2);
-   return 0; 
-}*/
-
-auto addPoly(struct node * poly_1, struct node * poly_2) {
+struct node * addPoly(struct node * poly_1, struct node * poly_2) {
    struct node * ptr_1 = poly_1->next;
    struct node * ptr_2 = poly_2->next;
    static struct node return_poly;
@@ -121,15 +113,14 @@ auto addPoly(struct node * poly_1, struct node * poly_2) {
       ptr_2 = ptr_2->next;
    }
    writePoly(address);
-   struct result {struct node * polynomial;};
-   return result {address};
+   return address;
 }
 
 int main(int argc, char** argv) { 
    auto [poly_1, poly_2, operation] = readPoly(argv[1]);
    writePoly(poly_1);
    writePoly(poly_2);
-   auto [new_poly] = addPoly(poly_1, poly_2);
+   struct node * new_poly = addPoly(poly_1, poly_2);
    writePoly(new_poly);
    return 0; 
 } 
